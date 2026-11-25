@@ -32,7 +32,9 @@ export function StellarBackdrop({ track }: { track: RefObject<HTMLElement> }) {
   const veil = useRef<HTMLDivElement>(null);
   const renderer = useRef<StellarRenderer | null>(null);
 
-  useLayoutEffect(() => {
+  // useEffect (not layout effect): runs after every ref in the page is attached,
+  // so `track` — a sibling rendered by the parent — is guaranteed to exist.
+  useEffect(() => {
     if (!canvas.current || !track.current) return;
     const r = new StellarRenderer(canvas.current, { quality: mobile ? 'low' : 'high', reducedMotion: reduced });
     r.setTheme((document.documentElement.getAttribute('data-theme') as 'dark' | 'light') ?? 'dark');
@@ -54,7 +56,17 @@ export function StellarBackdrop({ track }: { track: RefObject<HTMLElement> }) {
       );
     });
 
+    // content height changes as data and images load; keep scroll ranges correct
+    let t = 0;
+    const ro = new ResizeObserver(() => {
+      window.clearTimeout(t);
+      t = window.setTimeout(() => ScrollTrigger.refresh(), 150);
+    });
+    ro.observe(track.current);
+
     return () => {
+      window.clearTimeout(t);
+      ro.disconnect();
       ctx.revert();
       r.destroy();
       renderer.current = null;

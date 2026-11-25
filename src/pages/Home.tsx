@@ -8,8 +8,6 @@ export default function Home() {
   const track = useRef<HTMLDivElement>(null);
   return (
     <>
-      {/* The star's life cycle plays behind the page as you scroll */}
-      <StellarBackdrop track={track} />
       <div ref={track} className="relative z-10">
         <HomeHero />
         <FeaturedSection />
@@ -19,6 +17,8 @@ export default function Home() {
         <GallerySection />
         <CommunitySection />
       </div>
+      {/* The star's life cycle plays behind the page (fixed, z-0) as you scroll */}
+      <StellarBackdrop track={track} />
     </>
   );
 }

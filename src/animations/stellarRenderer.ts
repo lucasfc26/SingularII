@@ -109,6 +109,9 @@ export class StellarRenderer {
     this.seed();
     this.ro = new ResizeObserver(() => this.resize());
     this.ro.observe(canvas);
+    window.addEventListener('resize', this.onViewport);
+    window.addEventListener('orientationchange', this.onViewport);
+    window.visualViewport?.addEventListener('resize', this.onViewport);
     this.resize();
     if (opts.reducedMotion) this.intro = 1;
   }
@@ -139,7 +142,11 @@ export class StellarRenderer {
     cancelAnimationFrame(this.raf);
     this.raf = 0;
     this.ro.disconnect();
+    window.removeEventListener('resize', this.onViewport);
+    window.removeEventListener('orientationchange', this.onViewport);
+    window.visualViewport?.removeEventListener('resize', this.onViewport);
   }
+  private onViewport = () => requestAnimationFrame(() => this.resize());
 
   /* ---------- setup ---------- */
   private seed() {
@@ -156,6 +163,11 @@ export class StellarRenderer {
 
   private resize() {
     const rect = this.canvas.getBoundingClientRect();
+    if (rect.width < 2 || rect.height < 2) {
+      // not laid out yet (e.g. first paint on mobile) — try again next frame
+      requestAnimationFrame(() => this.resize());
+      return;
+    }
     const maxDpr = this.opts.quality === 'high' ? 1.75 : 1.25;
     this.dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
     this.w = Math.max(1, rect.width);
@@ -193,14 +205,18 @@ export class StellarRenderer {
 
   /* ---------- loop ---------- */
   private loop = (now: number) => {
-    const dt = Math.min(0.05, (now - this.last) / 1000);
+    const dt = Math.max(0, Math.min(0.05, (now - this.last) / 1000));
     this.last = now;
     if (!this.opts.reducedMotion) {
       this.t += dt;
       this.intro = Math.min(1, this.intro + dt / 1.6);
       this.p += (this.target - this.p) * (1 - Math.exp(-dt * 7));
     }
-    this.draw();
+    try {
+      this.draw();
+    } catch (e) {
+      console.warn('[stellar] frame skipped', e);
+    }
     this.raf = this.active ? requestAnimationFrame(this.loop) : 0;
   };
 
