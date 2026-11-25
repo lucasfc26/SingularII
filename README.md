@@ -15,9 +15,9 @@ Senha de todas: `cosmos123`
 | E-mail | Papel |
 |---|---|
 | admin@horizonte.ciencia | Superadministrador |
-| bruno.tavares@horizonte.ciencia | Administrador |
+| administrador@horizonte.ciencia | Administrador |
 | editora@horizonte.ciencia | Editor |
-| diego.martins@horizonte.ciencia | Colaborador |
+| colaborador@horizonte.ciencia | Colaborador |
 | leitor@horizonte.ciencia | Leitor |
 
 No painel, o seletor **Simular papel** mostra a interface com as permissões de outro papel.

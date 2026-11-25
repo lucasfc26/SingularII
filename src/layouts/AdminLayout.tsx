@@ -47,9 +47,9 @@ function AdminGate() {
         <div className="mt-6 space-y-2">
           {[
             ['admin@horizonte.ciencia', 'superadmin'],
-            ['bruno.tavares@horizonte.ciencia', 'admin'],
+            ['administrador@horizonte.ciencia', 'admin'],
             ['editora@horizonte.ciencia', 'editor'],
-            ['diego.martins@horizonte.ciencia', 'colaborador'],
+            ['colaborador@horizonte.ciencia', 'colaborador'],
           ].map(([email, role]) => (
             <button key={email} onClick={() => enter(email!)} disabled={!!loading} className="flex w-full items-center justify-between rounded-xl border border-line px-4 py-3 text-left transition hover:border-line-strong hover:bg-fg/[0.03]">
               <span>

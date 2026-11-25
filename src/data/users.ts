@@ -7,11 +7,11 @@ const hues = ['#6C8CFF', '#A78BFA', '#53DDF5', '#F0A35E', '#5FD3A0', '#F27A8A', 
 type Seed = [name: string, email: string, role: User['role'], status: User['status'], location: string, interests: string[]];
 
 const seeds: Seed[] = [
-  ['Ana Clara Ribeiro', 'admin@horizonte.ciencia', 'superadmin', 'active', 'São Paulo, SP', ['cosmologia', 'buracos-negros']],
-  ['Bruno Tavares', 'bruno.tavares@horizonte.ciencia', 'admin', 'active', 'Rio de Janeiro, RJ', ['astrofisica']],
-  ['Camila Nogueira', 'editora@horizonte.ciencia', 'editor', 'active', 'Curitiba, PR', ['mecanica-quantica', 'fisica-de-particulas']],
-  ['Diego Martins', 'diego.martins@horizonte.ciencia', 'colaborador', 'active', 'Recife, PE', ['astronomia-observacional']],
-  ['Lívia Santos', 'leitor@horizonte.ciencia', 'leitor', 'active', 'Belo Horizonte, MG', ['buracos-negros', 'astronomia-observacional', 'cosmologia']],
+  ['Marcony Cunha', 'admin@horizonte.ciencia', 'superadmin', 'active', 'Fortaleza, CE', ['cosmologia', 'buracos-negros']],
+  ['Marcony Cunha', 'administrador@horizonte.ciencia', 'admin', 'active', 'Fortaleza, CE', ['astrofisica']],
+  ['Marcony Cunha', 'editora@horizonte.ciencia', 'editor', 'active', 'Fortaleza, CE', ['mecanica-quantica', 'fisica-de-particulas']],
+  ['Marcony Cunha', 'colaborador@horizonte.ciencia', 'colaborador', 'active', 'Fortaleza, CE', ['astronomia-observacional']],
+  ['Marcony Cunha', 'leitor@horizonte.ciencia', 'leitor', 'active', 'Fortaleza, CE', ['buracos-negros', 'astronomia-observacional', 'cosmologia']],
   ['Pedro Henrique Alves', 'pedro.alves@example.com', 'leitor', 'active', 'Porto Alegre, RS', ['relatividade-geral']],
   ['Juliana Costa', 'juliana.costa@example.com', 'leitor', 'active', 'Salvador, BA', ['astrofisica', 'materia-escura']],
   ['Marcos Vinícius Lima', 'marcos.lima@example.com', 'leitor', 'pending', 'Fortaleza, CE', ['fisica-classica']],

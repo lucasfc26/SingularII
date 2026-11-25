@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { LayoutDashboard, LogOut, Menu, Search, User as UserIcon, X } from 'lucide-react';
+import { ExternalLink, LayoutDashboard, LogOut, Menu, Search, User as UserIcon, X } from 'lucide-react';
 import { Logo } from './Logo';
+import { INSTITUTION } from '@/data/institution';
 import { ThemeToggle } from './ThemeToggle';
 import { SearchModal } from './SearchModal';
 import { Avatar } from '../ui/Misc';
@@ -107,8 +108,29 @@ export function Header() {
         initial={{ y: -40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-        className="pointer-events-none fixed inset-x-0 top-0 z-[90] flex justify-center px-3 pt-3 sm:pt-4"
+        className="pointer-events-none fixed inset-x-0 top-0 z-[90] flex flex-col items-center px-3 pt-3 sm:pt-4"
       >
+        <AnimatePresence initial={false}>
+          {!scrolled && (
+            <motion.a
+              href={INSTITUTION.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="pointer-events-auto flex items-center gap-2 overflow-hidden pb-2 font-mono text-[10px] tracking-[0.12em] text-muted uppercase transition-colors hover:text-fg sm:text-[10.5px]"
+              aria-label={`${INSTITUTION.name} — ${INSTITUTION.sector} (abre ${INSTITUTION.urlLabel})`}
+            >
+              <span className="size-1.5 rounded-full bg-accent" aria-hidden />
+              <span>{INSTITUTION.name}</span>
+              <span className="hidden sm:inline">· {INSTITUTION.sector}</span>
+              <span className="hidden text-accent md:inline">· {INSTITUTION.urlLabel}</span>
+              <ExternalLink className="size-3" aria-hidden />
+            </motion.a>
+          )}
+        </AnimatePresence>
         <div
           className={cn(
             'glass pointer-events-auto flex w-full items-center justify-between gap-2 rounded-full transition-all duration-500 ease-[var(--ease-out-expo)] lg:w-auto',
@@ -164,7 +186,7 @@ export function Header() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -12, scale: 0.97 }}
               transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-              className="glass fixed inset-x-3 top-[72px] z-[89] origin-top rounded-2xl p-2 shadow-2xl lg:hidden"
+              className={cn('glass fixed inset-x-3 z-[89]', scrolled ? 'top-[68px]' : 'top-[92px]', ' origin-top rounded-2xl p-2 shadow-2xl lg:hidden')}
               style={{ background: 'var(--glass-strong)' }}
             >
               {NAV.map((item, i) => (

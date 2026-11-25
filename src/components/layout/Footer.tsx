@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Github, Instagram, Linkedin, Mail, MapPin, Youtube } from 'lucide-react';
+import { ExternalLink, Github, GraduationCap, Instagram, Linkedin, Mail, MapPin, Youtube } from 'lucide-react';
+import { INSTITUTION } from '@/data/institution';
 import { Logo } from './Logo';
 import { NewsletterForm } from '../home/NewsletterForm';
 import { categories } from '@/data/taxonomy';
@@ -32,6 +33,14 @@ export function Footer() {
             <p className="mt-5 text-sm leading-relaxed text-muted">
               Um observatório digital para quem nunca deixou de perguntar. Artigos, notícias, eventos e imagens sobre física, astrofísica e cosmologia — com rigor e encantamento.
             </p>
+            <a href={INSTITUTION.url} target="_blank" rel="noopener noreferrer" className="group mt-5 flex items-start gap-3 rounded-xl border border-line p-3 transition hover:border-line-strong">
+              <GraduationCap className="mt-0.5 size-5 shrink-0 text-accent" aria-hidden />
+              <span className="text-sm">
+                <span className="block font-medium text-fg">{INSTITUTION.name}</span>
+                <span className="block text-muted">{INSTITUTION.sector}</span>
+                <span className="mt-1 flex items-center gap-1 font-mono text-xs text-accent">{INSTITUTION.urlLabel} <ExternalLink className="size-3" aria-hidden /></span>
+              </span>
+            </a>
             <div className="mt-6">
               <p className="mb-3 text-sm font-medium">Newsletter semanal</p>
               <NewsletterForm compact />
@@ -59,7 +68,11 @@ export function Footer() {
                 </li>
                 <li className="flex items-start gap-2">
                   <MapPin className="mt-0.5 size-4 shrink-0" aria-hidden />
-                  <span>São Paulo · Brasil</span>
+                  <span>
+                    {INSTITUTION.sector} · {INSTITUTION.name}
+                    <br />
+                    {INSTITUTION.city}/{INSTITUTION.state} · {INSTITUTION.country}
+                  </span>
                 </li>
               </ul>
             </div>
@@ -67,7 +80,7 @@ export function Footer() {
         </div>
         <div className="mt-16 flex flex-col gap-4 border-t border-line pt-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} Horizonte. Imagens: NASA Image and Video Library (domínio público), com créditos indicados.
+            © {new Date().getFullYear()} Horizonte · {INSTITUTION.sector} da {INSTITUTION.name} ({INSTITUTION.shortName}), {INSTITUTION.city}/{INSTITUTION.state}. Imagens: NASA Image and Video Library (domínio público).
           </p>
           <div className="flex gap-5">
             <Link to="/privacidade" className="transition hover:text-fg">Política de privacidade</Link>
