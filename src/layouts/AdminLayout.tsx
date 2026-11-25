@@ -46,10 +46,10 @@ function AdminGate() {
         </p>
         <div className="mt-6 space-y-2">
           {[
-            ['admin@horizonte.ciencia', 'superadmin'],
-            ['administrador@horizonte.ciencia', 'admin'],
-            ['editora@horizonte.ciencia', 'editor'],
-            ['colaborador@horizonte.ciencia', 'colaborador'],
+            ['admin@singularii.ciencia', 'superadmin'],
+            ['administrador@singularii.ciencia', 'admin'],
+            ['editora@singularii.ciencia', 'editor'],
+            ['colaborador@singularii.ciencia', 'colaborador'],
           ].map(([email, role]) => (
             <button key={email} onClick={() => enter(email!)} disabled={!!loading} className="flex w-full items-center justify-between rounded-xl border border-line px-4 py-3 text-left transition hover:border-line-strong hover:bg-fg/[0.03]">
               <span>

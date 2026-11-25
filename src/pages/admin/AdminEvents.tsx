@@ -22,7 +22,7 @@ import { formatDate, formatTime, fromLocalInput, slugify, toLocalInput, uid } fr
 const blank = (): EventItem => ({
   id: uid('ev'), slug: '', title: '', summary: '', description: '', cover: '', type: 'palestra', modality: 'presencial',
   startsAt: new Date(Date.now() + 7 * 864e5).toISOString(), endsAt: new Date(Date.now() + 7 * 864e5 + 7200e3).toISOString(),
-  location: { venue: '', address: '', city: '' }, organizer: { name: 'Horizonte', about: 'Plataforma de divulgação científica.', contact: 'eventos@horizonte.ciencia' },
+  location: { venue: '', address: '', city: '' }, organizer: { name: 'SingularII', about: 'Plataforma de divulgação científica.', contact: 'eventos@singularii.ciencia' },
   capacity: 100, registeredCount: 0, speakers: [], schedule: [], topics: [], tags: [],
 });
 

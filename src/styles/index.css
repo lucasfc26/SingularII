@@ -4,7 +4,7 @@
 @custom-variant light (&:where([data-theme='light'], [data-theme='light'] *));
 
 /* ------------------------------------------------------------------
-   Design tokens — Horizonte
+   Design tokens — SingularII
    Dark é o tema principal; light redefine apenas as variáveis.
 ------------------------------------------------------------------- */
 :root,

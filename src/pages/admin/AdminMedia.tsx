@@ -65,7 +65,7 @@ export default function AdminMedia() {
         }
         await mediaService.create({
           id: uid('media'), title: f.name.replace(/\.[^.]+$/, ''), description: '', category: isVid ? 'educativos' : 'fotografias',
-          kind: isImg ? 'image' : 'video', src, thumb, credit: 'Equipe Horizonte', aspect, createdAt: new Date().toISOString(), topics: [], duration: isVid ? '—' : undefined,
+          kind: isImg ? 'image' : 'video', src, thumb, credit: 'Equipe SingularII', aspect, createdAt: new Date().toISOString(), topics: [], duration: isVid ? '—' : undefined,
         });
         setUploads((u) => u.map((x) => (x.name === f.name ? { ...x, done: true } : x)));
       } catch (e) {

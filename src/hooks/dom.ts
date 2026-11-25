@@ -30,7 +30,7 @@ export function useDocumentTitle(title?: string) {
   useEffect(() => {
     if (!title) return;
     const prev = document.title;
-    document.title = `${title} · Horizonte`;
+    document.title = `${title} · SingularII`;
     return () => {
       document.title = prev;
     };

@@ -26,9 +26,9 @@ export function eventToICS(e: EventItem) {
   return [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Horizonte//Eventos//PT',
+    'PRODID:-//SingularII//Eventos//PT',
     'BEGIN:VEVENT',
-    `UID:${e.id}@horizonte.ciencia`,
+    `UID:${e.id}@singularii.ciencia`,
     `DTSTAMP:${icsDate(new Date().toISOString())}`,
     `DTSTART:${icsDate(e.startsAt)}`,
     `DTEND:${icsDate(e.endsAt)}`,

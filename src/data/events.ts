@@ -15,7 +15,7 @@ const S = {
 };
 
 const org = {
-  horizonte: { name: 'Horizonte', about: 'Plataforma de divulgação científica dedicada à física e à astronomia.', contact: 'eventos@horizonte.ciencia' },
+  horizonte: { name: 'SingularII', about: 'Plataforma de divulgação científica dedicada à física e à astronomia.', contact: 'eventos@singularii.ciencia' },
   planetario: { name: 'Planetário Municipal', about: 'Espaço público de educação astronômica com cúpula digital de 18 m.', contact: 'contato@planetario.example' },
   sab: { name: 'Sociedade Astronômica Brasileira', about: 'Associação científica que reúne astrônomos profissionais do país.', contact: 'sab@example.org' },
   clube: { name: 'Clube de Astronomia do Cerrado', about: 'Grupo de observação com telescópios itinerantes e saídas a céu escuro.', contact: 'clube@example.org' },
@@ -47,7 +47,7 @@ export const events: EventItem[] = [
     description: 'Nesta palestra, a astrofísica Helena Vasconcelos percorre a história dos buracos negros — de curiosidade matemática da relatividade geral a objetos observados diretamente. Veremos como funcionam as imagens do Event Horizon Telescope, o que as fusões detectadas pelo LIGO revelam e quais perguntas continuam em aberto.\n\nA sessão terá 60 minutos de apresentação e 30 minutos de perguntas do público, presencial e online.',
     cover: IMG.bhJet, type: 'palestra', modality: 'hibrido', startsAt: at(5, 19, 0), endsAt: at(5, 20, 30),
     location: { venue: 'Auditório do Planetário', address: 'Rua Galileu, 300', city: 'São Paulo, SP' },
-    streamUrl: 'https://www.youtube.com/@horizonte', organizer: org.planetario, capacity: 250, registeredCount: 231, registrationDeadline: at(5, 17, 0),
+    streamUrl: 'https://www.youtube.com/@singularii', organizer: org.planetario, capacity: 250, registeredCount: 231, registrationDeadline: at(5, 17, 0),
     speakers: [S.helena],
     schedule: [
       { id: 'sc1', time: '19:00', title: 'Abertura', description: 'Boas-vindas e apresentação da palestrante.' },
@@ -93,7 +93,7 @@ export const events: EventItem[] = [
     summary: 'Uma conversa ao vivo sobre a engenharia das missões Artemis, com perguntas pelo chat.',
     description: 'A engenheira Beatriz Lacerda explica os desafios de levar seres humanos de volta à superfície lunar: o foguete SLS, a cápsula Orion, os módulos de pouso e a estação Gateway. Transmissão aberta e gratuita, com perguntas pelo chat.',
     cover: IMG.artemis, type: 'live', modality: 'online', startsAt: at(2, 20, 0), endsAt: at(2, 21, 15),
-    streamUrl: 'https://www.youtube.com/@horizonte', organizer: org.horizonte, capacity: 2000, registeredCount: 1384,
+    streamUrl: 'https://www.youtube.com/@singularii', organizer: org.horizonte, capacity: 2000, registeredCount: 1384,
     speakers: [S.beatriz, S.rafael],
     schedule: [
       { id: 'sc1', time: '20:00', title: 'Por que voltar à Lua?', speakerId: 'sp5' },
@@ -123,7 +123,7 @@ export const events: EventItem[] = [
     description: 'Um encontro para estudantes do ensino médio e graduação conhecerem a carreira científica a partir da experiência de pesquisadoras. Haverá roda de conversa, sessões de mentoria em pequenos grupos e visita guiada ao observatório.',
     cover: IMG.carina, type: 'encontro', modality: 'hibrido', startsAt: at(23, 10, 0), endsAt: at(23, 16, 0),
     location: { venue: 'Observatório Universitário', address: 'Campus Central', city: 'Belo Horizonte, MG' },
-    streamUrl: 'https://www.youtube.com/@horizonte', organizer: org.horizonte, capacity: 150, registeredCount: 63,
+    streamUrl: 'https://www.youtube.com/@singularii', organizer: org.horizonte, capacity: 150, registeredCount: 63,
     speakers: [S.helena, S.marina, S.luiza, S.beatriz],
     schedule: [
       { id: 'sc1', time: '10:00', title: 'Abertura e boas-vindas' },
@@ -138,7 +138,7 @@ export const events: EventItem[] = [
     summary: 'Como experimentos a quilômetros de profundidade tentam flagrar partículas que não emitem luz.',
     description: 'Daniel Ferraz apresenta os experimentos de detecção direta de matéria escura e o que seus resultados nulos nos ensinam. Palestra gravada e disponível na biblioteca multimídia.',
     cover: IMG.darkMatterCore, type: 'palestra', modality: 'online', startsAt: at(-12, 19, 0), endsAt: at(-12, 20, 30),
-    streamUrl: 'https://www.youtube.com/@horizonte', organizer: org.horizonte, capacity: 1000, registeredCount: 812,
+    streamUrl: 'https://www.youtube.com/@singularii', organizer: org.horizonte, capacity: 1000, registeredCount: 812,
     speakers: [S.daniel],
     schedule: [
       { id: 'sc1', time: '19:00', title: 'Evidências da matéria escura', speakerId: 'sp4' },

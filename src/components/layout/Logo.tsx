@@ -24,14 +24,14 @@ export function Logo({ className, forceDark, compact }: { className?: string; fo
       <LogoMark />
       {!compact && (
         <span className="font-display text-[17px] leading-none font-semibold tracking-tight" style={forceDark ? { color: '#F4F6FC' } : undefined}>
-          Horizonte
+          SingularII
         </span>
       )}
     </span>
   );
   if (forceDark) return content;
   return (
-    <Link to="/" aria-label="Horizonte — página inicial" className="rounded-lg">
+    <Link to="/" aria-label="SingularII — página inicial" className="rounded-lg">
       {content}
     </Link>
   );

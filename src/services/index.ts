@@ -25,8 +25,8 @@ export const db = {
   subscribers: createCollection<Subscriber>('subscribers', []),
   settings: createCollection<PlatformSettings>('settings', [
     {
-      id: 'settings', name: 'Horizonte', tagline: 'Observatório digital de divulgação científica',
-      contactEmail: 'contato@horizonte.ciencia', defaultTheme: 'dark', registrationsEnabled: true,
+      id: 'settings', name: 'SingularII', tagline: 'Observatório digital de divulgação científica',
+      contactEmail: 'contato@singularii.ciencia', defaultTheme: 'dark', registrationsEnabled: true,
       newsletterEnabled: true, commentsEnabled: false, maintenanceMode: false,
     },
   ]),

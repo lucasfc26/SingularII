@@ -14,7 +14,7 @@ const social = [
 ];
 
 const institutional = [
-  { to: '/sobre', label: 'Sobre a Horizonte' },
+  { to: '/sobre', label: 'Sobre a SingularII' },
   { to: '/contato', label: 'Contato' },
   { to: '/cadastro', label: 'Criar conta' },
   { to: '/admin', label: 'Área da equipe' },
@@ -64,7 +64,7 @@ export function Footer() {
               <ul className="space-y-3 text-sm text-muted">
                 <li className="flex items-start gap-2">
                   <Mail className="mt-0.5 size-4 shrink-0" aria-hidden />
-                  <a href="mailto:contato@horizonte.ciencia" className="transition hover:text-fg">contato@horizonte.ciencia</a>
+                  <a href="mailto:contato@singularii.ciencia" className="transition hover:text-fg">contato@singularii.ciencia</a>
                 </li>
                 <li className="flex items-start gap-2">
                   <MapPin className="mt-0.5 size-4 shrink-0" aria-hidden />
@@ -80,7 +80,7 @@ export function Footer() {
         </div>
         <div className="mt-16 flex flex-col gap-4 border-t border-line pt-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} Horizonte · {INSTITUTION.sector} da {INSTITUTION.name} ({INSTITUTION.shortName}), {INSTITUTION.city}/{INSTITUTION.state}. Imagens: NASA Image and Video Library (domínio público).
+            © {new Date().getFullYear()} SingularII · {INSTITUTION.sector} da {INSTITUTION.name} ({INSTITUTION.shortName}), {INSTITUTION.city}/{INSTITUTION.state}. Imagens: NASA Image and Video Library (domínio público).
           </p>
           <div className="flex gap-5">
             <Link to="/privacidade" className="transition hover:text-fg">Política de privacidade</Link>

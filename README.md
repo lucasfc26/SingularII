@@ -1,4 +1,4 @@
-# Horizonte — observatório digital de divulgação científica
+# SingularII — observatório digital de divulgação científica
 
 Frontend completo (React + TypeScript + Vite + Tailwind v4) de uma plataforma de divulgação científica sobre física, astrofísica e cosmologia, com área pública e painel administrativo. Todos os dados são mockados e persistidos no `localStorage`.
 
@@ -14,11 +14,11 @@ Senha de todas: `cosmos123`
 
 | E-mail | Papel |
 |---|---|
-| admin@horizonte.ciencia | Superadministrador |
-| administrador@horizonte.ciencia | Administrador |
-| editora@horizonte.ciencia | Editor |
-| colaborador@horizonte.ciencia | Colaborador |
-| leitor@horizonte.ciencia | Leitor |
+| admin@singularii.ciencia | Superadministrador |
+| administrador@singularii.ciencia | Administrador |
+| editora@singularii.ciencia | Editor |
+| colaborador@singularii.ciencia | Colaborador |
+| leitor@singularii.ciencia | Leitor |
 
 No painel, o seletor **Simular papel** mostra a interface com as permissões de outro papel.
 Em **Configurações → Restaurar dados originais** o estado de demonstração é reiniciado.

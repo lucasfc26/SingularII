@@ -9,8 +9,8 @@ const SERIES_QUANTUM = { id: 's-quantica', title: 'Fundamentos quânticos', tota
 export const articles: Article[] = [
   {
     id: 'art-1',
-    slug: 'o-que-existe-alem-do-horizonte-de-eventos',
-    title: 'O que existe além do horizonte de eventos?',
+    slug: 'alice-no-pais-do-qubit',
+    title: 'Alice no país do QUBIT',
     subtitle: 'Uma viagem pela geometria do espaço-tempo até a fronteira de onde nem a luz retorna — e o que a física consegue (e não consegue) dizer sobre o outro lado.',
     excerpt: 'O horizonte não é uma superfície material: é uma fronteira causal. Entenda o que a relatividade geral prevê para quem atravessa e por que a singularidade é um sinal de que a teoria chegou ao seu limite.',
     cover: IMG.behemoth,

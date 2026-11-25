@@ -18,9 +18,9 @@ import type { Role } from '@/types';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 const DEMOS: { email: string; role: Role }[] = [
-  { email: 'admin@horizonte.ciencia', role: 'superadmin' },
-  { email: 'editora@horizonte.ciencia', role: 'editor' },
-  { email: 'leitor@horizonte.ciencia', role: 'leitor' },
+  { email: 'admin@singularii.ciencia', role: 'superadmin' },
+  { email: 'editora@singularii.ciencia', role: 'editor' },
+  { email: 'leitor@singularii.ciencia', role: 'leitor' },
 ];
 
 function AuthShell({ children, title, subtitle }: { children: React.ReactNode; title: string; subtitle: string }) {
