@@ -291,6 +291,7 @@ export function MediaCard({ item, onOpen, index = 0 }: { item: MediaItem; onOpen
       <div className="absolute inset-x-0 bottom-0 p-4 text-white">
         <p className="font-mono text-[10px] tracking-[0.14em] text-[#53DDF5] uppercase">{cat?.label}</p>
         <p className="mt-1 font-display text-[16px] leading-snug font-semibold">{item.title}</p>
+        {item.sources?.length ? <p className="mt-1 truncate font-mono text-[10px] text-white/60">em {item.sources[0]!.type}{item.sources.length > 1 ? ` +${item.sources.length - 1}` : ''}: {item.sources[0]!.title}</p> : null}
         <p className="mt-1 line-clamp-2 max-h-0 text-[13px] text-white/70 opacity-0 transition-all duration-500 group-hover:max-h-12 group-hover:opacity-100">{item.description}</p>
       </div>
     </motion.button>

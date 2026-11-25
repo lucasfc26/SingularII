@@ -10,7 +10,7 @@ import { useToast } from '@/contexts/ToastContext';
 import { authors, getAuthor } from '@/data/authors';
 import { topics } from '@/data/taxonomy';
 import { BlockEditor, createBlock } from '@/components/admin/BlockEditor';
-import { CoverField, ReferencesEditor, TagInput } from '@/components/admin/Fields';
+import { AttachmentsEditor, CoverField, ReferencesEditor, TagInput } from '@/components/admin/Fields';
 import { NoPermission } from '@/components/admin/AdminUI';
 import { BlockRenderer } from '@/components/content/BlockRenderer';
 import { Modal } from '@/components/ui/Modal';
@@ -229,6 +229,11 @@ export default function ArticleEditorPage() {
                 <Field label="Total">{(fid) => <Input id={fid} type="number" min={1} value={draft.series!.total} onChange={(e) => set('series', { ...draft.series!, total: Number(e.target.value) })} />}</Field>
               </div>
             )}
+          </section>
+
+          <section className="panel p-4">
+            <h2 className="mb-3 text-sm font-semibold">Downloads (anexos)</h2>
+            <AttachmentsEditor value={draft.attachments ?? []} onChange={(v) => set('attachments', v)} />
           </section>
 
           <section className="panel p-4">

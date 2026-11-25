@@ -81,6 +81,10 @@ export const articles: Article[] = [
       ref('Grover, L. K.', 'A fast quantum mechanical algorithm for database search', 'Proceedings of the 28th Annual ACM Symposium on Theory of Computing, 212', 1996),
       ref('Feynman, R. P.', 'Simulating physics with computers', 'International Journal of Theoretical Physics, 21, 467', 1982),
     ],
+    attachments: [
+      { id: 'att-a1', name: 'Alice no País das Maravilhas (Lewis Carroll).epub', url: 'https://www.gutenberg.org/ebooks/11', description: 'O livro original, em domínio público — Project Gutenberg.' },
+      { id: 'att-a2', name: 'Através do Espelho (Lewis Carroll).epub', url: 'https://www.gutenberg.org/ebooks/12', description: 'Continuação, onde aparece a Rainha Branca — Project Gutenberg.' },
+    ],
   },
   {
     id: 'art-2',

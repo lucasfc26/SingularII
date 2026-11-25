@@ -1,5 +1,8 @@
 import { useRef, useState } from 'react';
-import { CheckCircle2, Image as ImageIcon, Pencil, Search, Trash2, Upload, Video, ImageUp } from 'lucide-react';
+import { CheckCircle2, Image as ImageIcon, Link2, Pencil, Search, Trash2, Upload, Video, ImageUp } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { FileIcon } from '@/components/content/Downloads';
+import { Segmented } from '@/components/ui/Misc';
 import type { MediaCategory, MediaItem } from '@/types';
 import { articlesService, mediaService } from '@/services';
 import { useQuery } from '@/hooks/useQuery';
@@ -14,19 +17,20 @@ import { Button } from '@/components/ui/Button';
 import { Field, Input, Select, Textarea } from '@/components/ui/Form';
 import { Chip } from '@/components/ui/Misc';
 import { EmptyState, Skeleton } from '@/components/ui/States';
-import { compressImage } from '@/utils/files';
+import { compressImage, fileFamily, formatBytes, readFileAsDataURL } from '@/utils/files';
 import { formatDate, uid } from '@/utils/format';
 import { cn } from '@/utils/cn';
 
 export default function AdminMedia() {
-  useDocumentTitle('Biblioteca de mídia');
+  useDocumentTitle('Downloads');
   const { can } = useAuth();
   const confirm = useConfirm();
   const toast = useToast();
   const [q, setQ] = useState('');
   const [cat, setCat] = useState<MediaCategory | ''>('');
+  const [kind, setKind] = useState<'all' | 'image' | 'video' | 'file'>('all');
   const dq = useDebounced(q);
-  const { data, loading } = useQuery(() => mediaService.list({ q: dq, category: cat || undefined }), [dq, cat], ['media']);
+  const { data, loading } = useQuery(() => mediaService.list({ q: dq, category: cat || undefined, kind: kind === 'all' ? undefined : kind }), [dq, cat, kind], ['media', 'articles', 'news', 'events']);
   const articles = useQuery(() => articlesService.list({ status: 'all', pageSize: 200 }), []);
   const [editing, setEditing] = useState<MediaItem | null>(null);
   const [coverFor, setCoverFor] = useState<MediaItem | null>(null);
@@ -40,10 +44,6 @@ export default function AdminMedia() {
     for (const f of Array.from(files)) {
       const isImg = f.type.startsWith('image/');
       const isVid = f.type.startsWith('video/');
-      if (!isImg && !isVid) {
-        toast({ title: `${f.name}: formato não suportado`, variant: 'error' });
-        continue;
-      }
       setUploads((u) => [...u, { name: f.name, progress: 0, done: false }]);
       // simulated upload progress
       for (let p = 20; p <= 100; p += 20) {
@@ -58,14 +58,17 @@ export default function AdminMedia() {
           const c = await compressImage(f);
           src = thumb = c.dataUrl;
           aspect = c.aspect;
-        } else {
+        } else if (isVid) {
           src = URL.createObjectURL(f); // session-only preview; a real backend would return a CDN URL
           thumb = '';
           aspect = 16 / 9;
+        } else {
+          src = f.size <= 2 * 1024 * 1024 ? await readFileAsDataURL(f) : URL.createObjectURL(f);
+          thumb = '';
         }
         await mediaService.create({
-          id: uid('media'), title: f.name.replace(/\.[^.]+$/, ''), description: '', category: isVid ? 'educativos' : 'fotografias',
-          kind: isImg ? 'image' : 'video', src, thumb, credit: 'Equipe SingularII', aspect, createdAt: new Date().toISOString(), topics: [], duration: isVid ? '—' : undefined,
+          id: uid('media'), title: f.name.replace(/\.[^.]+$/, ''), description: '', category: isImg ? 'fotografias' : isVid ? 'educativos' : 'documentos',
+          kind: isImg ? 'image' : isVid ? 'video' : 'file', fileName: f.name, mime: f.type, size: f.size, src, thumb, credit: 'Equipe SingularII', aspect, createdAt: new Date().toISOString(), topics: [], duration: isVid ? '—' : undefined,
         });
         setUploads((u) => u.map((x) => (x.name === f.name ? { ...x, done: true } : x)));
       } catch (e) {
@@ -99,8 +102,8 @@ export default function AdminMedia() {
 
   return (
     <>
-      <AdminPageHeader title="Multimídia" description="Imagens e vídeos usados em artigos, notícias, eventos e na galeria pública." actions={can('media:upload') && <Button icon={<Upload className="size-4" />} onClick={() => input.current?.click()}>Enviar arquivos</Button>} />
-      <input ref={input} type="file" accept="image/*,video/*" multiple hidden onChange={(e) => handleFiles(e.target.files)} />
+      <AdminPageHeader title="Downloads" description="Biblioteca + tudo o que foi publicado em artigos, notícias e eventos (itens vinculados são editados no conteúdo de origem)." actions={can('media:upload') && <Button icon={<Upload className="size-4" />} onClick={() => input.current?.click()}>Enviar arquivos</Button>} />
+      <input ref={input} type="file" multiple hidden onChange={(e) => handleFiles(e.target.files)} />
 
       {can('media:upload') && (
         <div
@@ -110,8 +113,8 @@ export default function AdminMedia() {
           className={cn('mb-6 flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed p-8 text-center transition', drag ? 'border-primary bg-primary/[0.06]' : 'border-line-strong')}
         >
           <Upload className="size-6 text-muted" />
-          <p className="text-sm">Arraste imagens ou vídeos para cá</p>
-          <p className="text-xs text-muted">JPG, PNG, WebP, MP4 · imagens são otimizadas automaticamente</p>
+          <p className="text-sm">Arraste imagens, vídeos, livros ou documentos para cá</p>
+          <p className="text-xs text-muted">Imagens são otimizadas automaticamente · arquivos até 2 MB ficam salvos</p>
           {uploads.length > 0 && (
             <ul className="mt-4 w-full max-w-md space-y-2 text-left">
               {uploads.map((u) => (
@@ -125,6 +128,7 @@ export default function AdminMedia() {
         </div>
       )}
 
+      <Segmented layoutId="adm-dl" value={kind} onChange={setKind} className="mb-4 w-fit" options={[{ value: 'all', label: 'Tudo' }, { value: 'image', label: 'Imagens' }, { value: 'video', label: 'Vídeos' }, { value: 'file', label: 'Arquivos' }]} />
       <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-center">
         <div className="md:w-72"><Input leading={<Search className="size-4" />} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar arquivos" aria-label="Buscar arquivos" /></div>
         <div className="no-scrollbar flex gap-2 overflow-x-auto">
@@ -140,17 +144,27 @@ export default function AdminMedia() {
           {data.map((m) => (
             <div key={m.id} className="panel group overflow-hidden">
               <div className="relative aspect-[4/3] bg-bg-2">
-                {m.thumb ? <img src={m.thumb} alt="" loading="lazy" className="size-full object-cover" /> : <video src={m.src} className="size-full object-cover" muted />}
-                <span className="absolute top-2 left-2 rounded bg-black/60 p-1 text-white">{m.kind === 'video' ? <Video className="size-3.5" /> : <ImageIcon className="size-3.5" />}</span>
+                {m.kind === 'file' ? (
+                  <div className="grid size-full place-items-center">
+                    <FileIcon family={fileFamily(m.fileName ?? m.title, m.mime, m.src)} className="size-14" />
+                  </div>
+                ) : m.thumb ? <img src={m.thumb} alt="" loading="lazy" className="size-full object-cover" /> : <video src={m.src} className="size-full object-cover" muted />}
+                <span className="absolute top-2 left-2 rounded bg-black/60 p-1 text-white">{m.kind === 'video' ? <Video className="size-3.5" /> : m.kind === 'file' ? <Link2 className="size-3.5" /> : <ImageIcon className="size-3.5" />}</span>
+                {m.derived && <span className="absolute top-2 right-2 rounded bg-primary px-1.5 py-0.5 font-mono text-[9px] tracking-wider text-on-primary uppercase">Vinculado</span>}
                 <div className="absolute inset-0 flex items-center justify-center gap-1.5 bg-black/50 opacity-0 transition group-hover:opacity-100 group-focus-within:opacity-100">
-                  <button onClick={() => setEditing(structuredClone(m))} className="rounded-lg bg-white/15 p-2 text-white backdrop-blur hover:bg-white/25" aria-label="Editar descrição"><Pencil className="size-4" /></button>
+                  {!m.derived && <button onClick={() => setEditing(structuredClone(m))} className="rounded-lg bg-white/15 p-2 text-white backdrop-blur hover:bg-white/25" aria-label="Editar descrição"><Pencil className="size-4" /></button>}
                   {m.kind === 'image' && <button onClick={() => setCoverFor(m)} className="rounded-lg bg-white/15 p-2 text-white backdrop-blur hover:bg-white/25" aria-label="Usar como capa"><ImageUp className="size-4" /></button>}
-                  {can('media:delete') && <button onClick={() => remove(m)} className="rounded-lg bg-white/15 p-2 text-white backdrop-blur hover:bg-danger" aria-label="Excluir"><Trash2 className="size-4" /></button>}
+                  {can('media:delete') && !m.derived && <button onClick={() => remove(m)} className="rounded-lg bg-white/15 p-2 text-white backdrop-blur hover:bg-danger" aria-label="Excluir"><Trash2 className="size-4" /></button>}
                 </div>
               </div>
               <div className="p-3">
-                <p className="truncate text-sm font-medium">{m.title}</p>
-                <p className="truncate font-mono text-[10.5px] text-muted">{mediaCategories.find((c) => c.id === m.category)?.label} · {formatDate(m.createdAt)}</p>
+                <p className="truncate text-sm font-medium">{m.fileName ?? m.title}</p>
+                <p className="truncate font-mono text-[10.5px] text-muted">{mediaCategories.find((c) => c.id === m.category)?.label} · {m.size ? formatBytes(m.size) : formatDate(m.createdAt)}</p>
+                {m.sources?.map((src) => (
+                  <Link key={src.to} to={src.to} target="_blank" className="block truncate text-[11px] text-primary hover:underline">
+                    {src.type}: {src.title}
+                  </Link>
+                ))}
               </div>
             </div>
           ))}

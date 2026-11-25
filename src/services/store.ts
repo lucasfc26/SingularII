@@ -1,6 +1,6 @@
 import { delay, ApiError } from './http';
 
-const PREFIX = 'horizonte:v4:';
+const PREFIX = 'horizonte:v5:';
 export const CHANGE_EVENT = 'horizonte:change';
 
 export function emitChange(collection: string) {

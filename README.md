@@ -23,6 +23,12 @@ Senha de todas: `cosmos123`
 No painel, o seletor **Simular papel** mostra a interface com as permissões de outro papel.
 Em **Configurações → Restaurar dados originais** o estado de demonstração é reiniciado.
 
+## Downloads e apoiadores
+
+- **Downloads** (`/downloads`, antes Multimídia) reúne automaticamente toda imagem, vídeo e arquivo publicado em artigos, notícias e eventos, junto com a biblioteca do painel. Cada item mostra onde apareceu, e a busca aceita o nome do arquivo ou o título do artigo/evento.
+- Eventos, artigos e notícias têm uma seção **Downloads (anexos)** no painel. Arquivos de até 2 MB ficam salvos com o conteúdo; maiores devem ser adicionados por link.
+- **Painel → Apoiadores** cadastra instituições (nome, descrição, logo e link). No formulário do evento elas são escolhidas em **Realização** e **Apoio**, e aparecem na página do evento com a logo levando ao link. As logos de exemplo são provisórias: envie as oficiais pelo painel.
+
 ## Estrutura
 
 ```

@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, CalendarDays, Clock, ExternalLink, Globe2, Mail, MapPin, Star, Users, Video } from 'lucide-react';
+import { ArrowLeft, CalendarDays, Clock, Download, ExternalLink, Globe2, Link2, Mail, MapPin, Star, Users, Video } from 'lucide-react';
+import { AttachmentList } from '@/components/content/Downloads';
+import { SupportersShowcase } from '@/components/content/Supporters';
 import type { Registration } from '@/types';
 import { eventsService, eventStatus } from '@/services';
 import { useQuery } from '@/hooks/useQuery';
@@ -147,6 +149,13 @@ export default function EventDetail() {
             </div>
           </section>
 
+          {(event.organizers?.length || event.supporters?.length) ? (
+            <section aria-labelledby="realizacao">
+              <h2 id="realizacao" className="mb-6 font-display text-2xl font-semibold">Realização e apoio</h2>
+              <SupportersShowcase organizers={event.organizers} supporters={event.supporters} />
+            </section>
+          ) : null}
+
           <section aria-labelledby="organizacao" className="panel p-6">
             <p className="eyebrow">Organização</p>
             <h2 id="organizacao" className="mt-2 font-display text-xl font-semibold">{event.organizer.name}</h2>
@@ -190,6 +199,29 @@ export default function EventDetail() {
               <p className="mb-3 text-xs font-medium text-muted">Adicionar ao calendário</p>
               <AddToCalendar event={event} />
             </div>
+
+            {event.attachments?.length ? (
+              <div className="mt-6 border-t border-line pt-5">
+                <p className="mb-3 flex items-center gap-2 text-xs font-medium text-muted"><Download className="size-3.5" /> Downloads</p>
+                <AttachmentList files={event.attachments} compact />
+              </div>
+            ) : null}
+
+            {event.links?.length ? (
+              <div className="mt-6 border-t border-line pt-5">
+                <p className="mb-3 flex items-center gap-2 text-xs font-medium text-muted"><Link2 className="size-3.5" /> Links externos</p>
+                <ul className="space-y-1">
+                  {event.links.map((l) => (
+                    <li key={l.id}>
+                      <a href={l.url} target="_blank" rel="noopener noreferrer" className="group flex items-center justify-between gap-3 rounded-lg px-2 py-1.5 text-sm text-fg/85 transition hover:bg-fg/[0.04] hover:text-fg">
+                        <span className="min-w-0 truncate">{l.label}</span>
+                        <ExternalLink className="size-3.5 shrink-0 text-muted group-hover:text-fg" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
 
             <div className="mt-6 border-t border-line pt-5">
               <p className="mb-3 flex items-center gap-2 text-xs font-medium text-muted"><Users className="size-3.5" /> Participantes confirmados</p>

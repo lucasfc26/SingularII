@@ -11,7 +11,7 @@ import { categories, getCategory, topics } from '@/data/taxonomy';
 import { authors } from '@/data/authors';
 import { AdminPageHeader, Can, IconAction, RowActions, StatusBadge, Table, Td, Th } from '@/components/admin/AdminUI';
 import { BlockEditor, createBlock } from '@/components/admin/BlockEditor';
-import { CoverField } from '@/components/admin/Fields';
+import { AttachmentsEditor, CoverField } from '@/components/admin/Fields';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { Field, Input, Select, Switch, Textarea } from '@/components/ui/Form';
@@ -159,6 +159,10 @@ export default function AdminNews() {
               <div className="flex flex-wrap gap-1.5">{topics.map((t) => <Chip key={t.slug} active={editing.topics.includes(t.slug)} onClick={() => set('topics', editing.topics.includes(t.slug) ? editing.topics.filter((x) => x !== t.slug) : [...editing.topics, t.slug])}>{t.name}</Chip>)}</div>
             </div>
             <Switch checked={editing.highlight} onChange={(v) => set('highlight', v)} label="Notícia importante" description="Recebe destaque visual na listagem e na home." disabled={!can('content:publish')} />
+            <div>
+              <p className="mb-2 text-[13px] font-medium">Downloads (anexos)</p>
+              <AttachmentsEditor value={editing.attachments ?? []} onChange={(v) => set('attachments', v)} />
+            </div>
             <div className="border-t border-line pt-4">
               <p className="mb-3 text-[13px] font-medium">Conteúdo</p>
               <BlockEditor blocks={editing.body} onChange={(b) => set('body', b)} />

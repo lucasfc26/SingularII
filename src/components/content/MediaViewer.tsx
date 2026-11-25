@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Download, Maximize, Minimize, Pause, Play, Volume2, VolumeX, X } from 'lucide-react';
 import type { MediaItem } from '@/types';
+import { Link } from 'react-router-dom';
 import { mediaCategories } from '@/data/media';
 import { useLockBody } from '@/hooks/dom';
 import { cn } from '@/utils/cn';
@@ -197,6 +198,17 @@ export function MediaViewer({ items, index, onClose, onIndex }: { items: MediaIt
             <h2 className="mt-1.5 font-display text-xl font-semibold sm:text-2xl">{item.title}</h2>
             <p className="mt-2 max-w-3xl text-sm leading-relaxed text-white/70">{item.description}</p>
             <p className="mt-3 font-mono text-[11px] text-white/50">Fonte: {item.credit}</p>
+            {item.sources?.length ? (
+              <p className="mt-2 text-xs text-white/60">
+                Aparece em:{' '}
+                {item.sources.map((s, i) => (
+                  <span key={s.to}>
+                    {i > 0 && ' · '}
+                    <Link to={s.to} onClick={onClose} className="text-[#53DDF5] hover:underline">{s.type} “{s.title}”</Link>
+                  </span>
+                ))}
+              </p>
+            ) : null}
           </div>
         </motion.div>
       )}

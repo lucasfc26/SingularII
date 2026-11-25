@@ -17,6 +17,7 @@ import { formatCompact, formatDateLong } from '@/utils/format';
 import { EASE } from '@/animations/variants';
 import { cn } from '@/utils/cn';
 import NotFound from './NotFound';
+import { AttachmentList } from '@/components/content/Downloads';
 
 export function ReadingProgress() {
   const { scrollYProgress } = useScroll();
@@ -140,6 +141,12 @@ export default function ArticleDetail() {
             </section>
           )}
 
+          {article.attachments?.length ? (
+            <section className="mt-14 border-t border-line pt-10" aria-labelledby="downloads">
+              <h2 id="downloads" className="mb-5 font-display text-2xl font-semibold">Downloads</h2>
+              <AttachmentList files={article.attachments} />
+            </section>
+          ) : null}
           <section className="panel mt-14 flex flex-col gap-5 p-6 sm:flex-row" aria-label="Sobre o autor">
             <Avatar name={author.name} hue={author.hue} size={64} />
             <div>

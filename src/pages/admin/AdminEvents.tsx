@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Download, ExternalLink, Pencil, Plus, Search, Trash2, UserCheck, Users, X } from 'lucide-react';
 import type { EventItem, EventStatus, Registration, Speaker } from '@/types';
-import { eventsService, eventStatus } from '@/services';
+import { eventsService, eventStatus, supportersService } from '@/services';
+import { Link } from 'react-router-dom';
 import { useQuery } from '@/hooks/useQuery';
 import { useDebounced, useDocumentTitle } from '@/hooks/dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -9,7 +10,7 @@ import { useConfirm } from '@/contexts/ConfirmContext';
 import { useToast } from '@/contexts/ToastContext';
 import { topics } from '@/data/taxonomy';
 import { AdminPageHeader, Can, IconAction, NoPermission, RowActions, Table, Td, Th } from '@/components/admin/AdminUI';
-import { CoverField, TagInput } from '@/components/admin/Fields';
+import { AttachmentsEditor, CoverField, LinksEditor, SupporterPicker, TagInput } from '@/components/admin/Fields';
 import { CapacityBar, EVENT_TYPE_LABEL, EventStatusBadge, MODALITY_LABEL, STATUS_META } from '@/components/content/Cards';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
@@ -73,6 +74,7 @@ export default function AdminEvents() {
   const [statusF, setStatusF] = useState<EventStatus | 'all'>('all');
   const dq = useDebounced(q);
   const { data, loading } = useQuery(() => eventsService.list({ q: dq, status: statusF, when: 'all' }), [dq, statusF], ['events']);
+  const sups = useQuery(() => supportersService.list(), [], ['supporters']);
   const [editing, setEditing] = useState<EventItem | null>(null);
   const [isNew, setIsNew] = useState(false);
   const [attendees, setAttendees] = useState<EventItem | null>(null);
@@ -244,6 +246,32 @@ export default function AdminEvents() {
                   </div>
                 ))}
               </div>
+            </div>
+
+            <div className="rounded-xl border border-line p-4">
+              <p className="mb-1 text-[13px] font-medium">Downloads (anexos)</p>
+              <p className="mb-3 text-xs text-muted">Livros, pôsteres, slides e materiais. Aparecem no quadro lateral do evento e em Downloads.</p>
+              <AttachmentsEditor value={editing.attachments ?? []} onChange={(v) => set('attachments', v)} />
+            </div>
+
+            <div className="rounded-xl border border-line p-4">
+              <p className="mb-3 text-[13px] font-medium">Links externos</p>
+              <LinksEditor value={editing.links ?? []} onChange={(v) => set('links', v)} />
+            </div>
+
+            <div className="space-y-5 rounded-xl border border-line p-4">
+              <div className="flex items-center justify-between">
+                <p className="text-[13px] font-medium">Realização e apoio</p>
+                <Link to="/admin/apoiadores" className="text-xs text-primary hover:underline">Cadastrar apoiador</Link>
+              </div>
+              {sups.data?.length ? (
+                <>
+                  <SupporterPicker label="Realização" supporters={sups.data} value={editing.organizers ?? []} onChange={(v) => set('organizers', v)} />
+                  <SupporterPicker label="Apoio" supporters={sups.data} value={editing.supporters ?? []} onChange={(v) => set('supporters', v)} />
+                </>
+              ) : (
+                <p className="text-xs text-muted">Nenhum apoiador cadastrado ainda.</p>
+              )}
             </div>
 
             <div>

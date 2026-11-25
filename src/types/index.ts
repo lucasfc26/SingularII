@@ -66,6 +66,32 @@ export type Block =
 
 export type BlockType = Block['type'];
 
+/** A downloadable file attached to an article, news item or event. */
+export interface Attachment {
+  id: ID;
+  name: string;
+  url: string; // remote URL or data: URL
+  mime?: string;
+  size?: number; // bytes
+  description?: string;
+}
+
+export interface ExternalLink {
+  id: ID;
+  label: string;
+  url: string;
+}
+
+/** Institution that organizes or supports events. */
+export interface Supporter {
+  id: ID;
+  name: string;
+  description: string;
+  logo: string;
+  url: string;
+  createdAt: ISODate;
+}
+
 export interface Reference {
   id: ID;
   authors: string;
@@ -96,6 +122,7 @@ export interface Article {
   scheduledFor?: ISODate;
   content: Block[];
   references: Reference[];
+  attachments?: Attachment[];
 }
 
 export interface NewsItem {
@@ -115,6 +142,7 @@ export interface NewsItem {
   status: PublishStatus;
   scheduledFor?: ISODate;
   body: Block[];
+  attachments?: Attachment[];
 }
 
 export type EventType =
@@ -168,6 +196,10 @@ export interface EventItem {
   topics: string[];
   tags: string[];
   featured?: boolean;
+  attachments?: Attachment[];
+  links?: ExternalLink[];
+  organizers?: ID[]; // supporter ids — Realização
+  supporters?: ID[]; // supporter ids — Apoio
 }
 
 export type MediaCategory =
@@ -178,14 +210,22 @@ export type MediaCategory =
   | 'planetas'
   | 'simulacoes'
   | 'documentarios'
-  | 'educativos';
+  | 'educativos'
+  | 'documentos';
+
+/** Where a media item appeared on the site (so readers can find it again). */
+export interface MediaSource {
+  type: 'artigo' | 'notícia' | 'evento';
+  title: string;
+  to: string;
+}
 
 export interface MediaItem {
   id: ID;
   title: string;
   description: string;
   category: MediaCategory;
-  kind: 'image' | 'video';
+  kind: 'image' | 'video' | 'file';
   src: string;
   thumb: string;
   credit: string;
@@ -193,6 +233,12 @@ export interface MediaItem {
   duration?: string;
   createdAt: ISODate;
   topics: string[];
+  fileName?: string;
+  mime?: string;
+  size?: number;
+  sources?: MediaSource[];
+  /** true when generated from an article/news/event (edit it at the source). */
+  derived?: boolean;
 }
 
 export interface User {

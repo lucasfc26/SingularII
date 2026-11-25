@@ -11,6 +11,7 @@ export const mediaCategories: { id: MediaCategory; label: string }[] = [
   { id: 'simulacoes', label: 'Simulações científicas' },
   { id: 'documentarios', label: 'Documentários' },
   { id: 'educativos', label: 'Vídeos educativos' },
+  { id: 'documentos', label: 'Documentos e livros' },
 ];
 
 type Seed = Omit<MediaItem, 'id' | 'createdAt' | 'thumb' | 'kind'> & { thumb?: string; kind?: MediaItem['kind'] };

@@ -61,7 +61,7 @@ export function readFileAsDataURL(file: File): Promise<string> {
 }
 
 /** Downscale an uploaded image so it fits comfortably in localStorage. */
-export async function compressImage(file: File, maxSide = 1400, quality = 0.82): Promise<{ dataUrl: string; aspect: number }> {
+export async function compressImage(file: File, maxSide = 1400, quality = 0.82, format: 'image/jpeg' | 'image/png' = 'image/jpeg'): Promise<{ dataUrl: string; aspect: number }> {
   const src = await readFileAsDataURL(file);
   const img = await new Promise<HTMLImageElement>((res, rej) => {
     const i = new Image();
@@ -74,5 +74,42 @@ export async function compressImage(file: File, maxSide = 1400, quality = 0.82):
   canvas.width = Math.round(img.width * scale);
   canvas.height = Math.round(img.height * scale);
   canvas.getContext('2d')!.drawImage(img, 0, 0, canvas.width, canvas.height);
-  return { dataUrl: canvas.toDataURL('image/jpeg', quality), aspect: img.width / img.height };
+  return { dataUrl: canvas.toDataURL(format, quality), aspect: img.width / img.height };
 }
+
+/* ---------- file helpers ---------- */
+export type FileFamily = 'pdf' | 'doc' | 'sheet' | 'slides' | 'archive' | 'image' | 'video' | 'audio' | 'book' | 'text' | 'link';
+
+export function fileFamily(name: string, mime = '', url = ''): FileFamily {
+  const ext = (name.split('.').pop() ?? '').toLowerCase();
+  if (mime.startsWith('image/') || ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext)) return 'image';
+  if (mime.startsWith('video/') || ['mp4', 'webm', 'mov'].includes(ext)) return 'video';
+  if (mime.startsWith('audio/') || ['mp3', 'wav', 'ogg'].includes(ext)) return 'audio';
+  if (mime === 'application/pdf' || ext === 'pdf') return 'pdf';
+  if (['epub', 'mobi'].includes(ext)) return 'book';
+  if (['doc', 'docx', 'odt', 'rtf'].includes(ext)) return 'doc';
+  if (['xls', 'xlsx', 'ods', 'csv'].includes(ext)) return 'sheet';
+  if (['ppt', 'pptx', 'odp', 'key'].includes(ext)) return 'slides';
+  if (['zip', 'rar', '7z', 'tar', 'gz'].includes(ext)) return 'archive';
+  if (['txt', 'md', 'tex'].includes(ext) || mime.startsWith('text/')) return 'text';
+  if (/^https?:/.test(url) && !ext) return 'link';
+  return 'doc';
+}
+
+export const FILE_FAMILY_LABEL: Record<FileFamily, string> = {
+  pdf: 'PDF', doc: 'Documento', sheet: 'Planilha', slides: 'Apresentação', archive: 'Arquivo compactado',
+  image: 'Imagem', video: 'Vídeo', audio: 'Áudio', book: 'Livro', text: 'Texto', link: 'Link externo',
+};
+
+export function formatBytes(n?: number) {
+  if (!n) return '';
+  const u = ['B', 'KB', 'MB', 'GB'];
+  let i = 0;
+  while (n >= 1024 && i < u.length - 1) {
+    n /= 1024;
+    i++;
+  }
+  return `${n.toFixed(i ? 1 : 0).replace('.', ',')} ${u[i]}`;
+}
+
+export const textFile = (content: string) => `data:text/plain;charset=utf-8,${encodeURIComponent(content)}`;

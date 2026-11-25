@@ -1,7 +1,9 @@
 import type {
   Article, Category, EventItem, EventStatus, ListParams, MediaItem, NewsItem,
-  Paginated, PlatformSettings, Registration, Subscriber, User,
+  Paginated, PlatformSettings, Registration, Subscriber, User, Supporter, Attachment, MediaSource, Block,
 } from '@/types';
+import { supporters as supporterSeed } from '@/data/supporters';
+import { fileFamily } from '@/utils/files';
 import { articles as articleSeed } from '@/data/articles';
 import { news as newsSeed } from '@/data/news';
 import { events as eventSeed } from '@/data/events';
@@ -23,6 +25,7 @@ export const db = {
   registrations: createCollection<Registration>('registrations', regSeed),
   categories: createCollection<Category>('categories', categorySeed),
   subscribers: createCollection<Subscriber>('subscribers', []),
+  supporters: createCollection<Supporter>('supporters', supporterSeed),
   settings: createCollection<PlatformSettings>('settings', [
     {
       id: 'settings', name: 'SingularII', tagline: 'Observatório digital de divulgação científica',
@@ -154,18 +157,103 @@ export const eventsService = {
   setAttendance: (regId: string, attended: boolean) => db.registrations.update(regId, { attended }),
 };
 
-/* ---------------- Media ---------------- */
+/* ---------------- Media / Downloads ---------------- */
+/**
+ * Everything published on the site (article/news images and videos, event
+ * covers and every attached file) is collected here automatically, merged
+ * with the media library and tagged with where it appeared.
+ */
+async function collectSiteMedia(): Promise<MediaItem[]> {
+  const [arts, nws, evs] = await Promise.all([db.articles.list(), db.news.list(), db.events.list()]);
+  const found: MediaItem[] = [];
+  const add = (key: string, src: string, kind: MediaItem['kind'], title: string, source: MediaSource, opts: Partial<MediaItem> = {}) => {
+    if (!src) return;
+    found.push({
+      id: `site-${key}`, title, description: opts.description ?? '', category: kind === 'file' ? 'documentos' : kind === 'video' ? 'educativos' : 'fotografias',
+      kind, src, thumb: kind === 'image' ? src : opts.thumb ?? '', credit: opts.credit ?? source.title, aspect: kind === 'video' ? 16 / 9 : 1.5,
+      createdAt: opts.createdAt ?? new Date().toISOString(), topics: opts.topics ?? [], sources: [source], derived: true, ...opts,
+    });
+  };
+  const fromBlocks = (prefix: string, blocks: Block[], source: MediaSource, topics: string[], createdAt: string) =>
+    blocks.forEach((b, i) => {
+      if (b.type === 'image') add(`${prefix}-b${i}`, b.src, 'image', b.caption || source.title, source, { credit: b.credit ?? '', topics, createdAt, description: b.caption ?? '' });
+      if (b.type === 'video') add(`${prefix}-b${i}`, b.src, 'video', b.caption || source.title, source, { thumb: b.poster, topics, createdAt, duration: '—' });
+    });
+  const fromFiles = (prefix: string, files: Attachment[] | undefined, source: MediaSource, topics: string[], createdAt: string) =>
+    files?.forEach((a) => {
+      const fam = fileFamily(a.name, a.mime, a.url);
+      const kind: MediaItem['kind'] = fam === 'image' ? 'image' : fam === 'video' ? 'video' : 'file';
+      add(`${prefix}-${a.id}`, a.url, kind, a.name.replace(/\.[^.]+$/, ''), source, { fileName: a.name, mime: a.mime, size: a.size, description: a.description ?? '', topics, createdAt });
+    });
+
+  for (const a of arts.filter(isLive)) {
+    const src: MediaSource = { type: 'artigo', title: a.title, to: `/artigos/${a.slug}` };
+    add(`art-${a.id}-cover`, a.cover, 'image', a.title, src, { topics: a.topics, createdAt: a.publishedAt, description: a.excerpt });
+    fromBlocks(`art-${a.id}`, a.content, src, a.topics, a.publishedAt);
+    fromFiles(`art-${a.id}`, a.attachments, src, a.topics, a.publishedAt);
+  }
+  for (const n of nws.filter(isLive)) {
+    const src: MediaSource = { type: 'notícia', title: n.title, to: `/noticias/${n.slug}` };
+    add(`news-${n.id}-cover`, n.cover, 'image', n.title, src, { topics: n.topics, createdAt: n.publishedAt, credit: n.source.name, description: n.excerpt });
+    fromBlocks(`news-${n.id}`, n.body, src, n.topics, n.publishedAt);
+    fromFiles(`news-${n.id}`, n.attachments, src, n.topics, n.publishedAt);
+  }
+  for (const e of evs) {
+    const src: MediaSource = { type: 'evento', title: e.title, to: `/eventos/${e.slug}` };
+    add(`ev-${e.id}-cover`, e.cover, 'image', e.title, src, { topics: e.topics, createdAt: e.startsAt, description: e.summary });
+    fromFiles(`ev-${e.id}`, e.attachments, src, e.topics, e.startsAt);
+  }
+  return found;
+}
+
+/** Library items + site items, de-duplicated by file URL, with every place each one appears. */
+async function allMedia(): Promise<MediaItem[]> {
+  const [library, site] = await Promise.all([db.media.list(), collectSiteMedia()]);
+  const norm = (u: string) => u.replace('~large', '~medium');
+  const bySrc = new Map<string, MediaItem>();
+  for (const m of library) bySrc.set(norm(m.src), { ...m, sources: [...(m.sources ?? [])] });
+  for (const d of site) {
+    const key = norm(d.src);
+    const hit = bySrc.get(key);
+    if (hit) {
+      if (!hit.sources!.some((x) => x.to === d.sources![0]!.to)) hit.sources!.push(d.sources![0]!);
+      hit.topics = [...new Set([...hit.topics, ...d.topics])];
+    } else bySrc.set(key, d);
+  }
+  return [...bySrc.values()];
+}
+
 export const mediaService = {
-  async list(params: { q?: string; category?: string; kind?: 'image' | 'video'; topic?: string } = {}) {
-    let items = await db.media.list();
+  async list(params: { q?: string; category?: string; kind?: MediaItem['kind'] | 'visual'; topic?: string; includeDerived?: boolean } = {}) {
+    let items = params.includeDerived === false ? await db.media.list() : await allMedia();
     if (params.category) items = items.filter((m) => m.category === params.category);
-    if (params.kind) items = items.filter((m) => m.kind === params.kind);
+    if (params.kind === 'visual') items = items.filter((m) => m.kind !== 'file');
+    else if (params.kind) items = items.filter((m) => m.kind === params.kind);
     if (params.topic) items = items.filter((m) => m.topics.includes(params.topic!));
-    return items.filter((m) => matches(params.q, m.title, m.description, m.credit)).sort(byDate((m) => m.createdAt));
+    return items
+      .filter((m) => matches(params.q, m.title, m.description, m.credit, m.fileName, (m.sources ?? []).map((x) => x.title)))
+      .sort(byDate((m) => m.createdAt));
   },
   create: (m: MediaItem) => db.media.create(m),
   update: (id: string, patch: Partial<MediaItem>) => db.media.update(id, patch),
   remove: (id: string) => db.media.remove(id),
+};
+
+/* ---------------- Supporters (Realização / Apoio) ---------------- */
+export const supportersService = {
+  async list(q?: string) {
+    return (await db.supporters.list()).filter((s) => matches(q, s.name, s.description)).sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+  },
+  create: (s: Supporter) => db.supporters.create(s),
+  update: (id: string, patch: Partial<Supporter>) => db.supporters.update(id, patch),
+  async remove(id: string) {
+    await db.supporters.remove(id);
+    // detach from events
+    const evs = await db.events.list();
+    for (const e of evs.filter((x) => x.organizers?.includes(id) || x.supporters?.includes(id))) {
+      await db.events.update(e.id, { organizers: e.organizers?.filter((x) => x !== id), supporters: e.supporters?.filter((x) => x !== id) });
+    }
+  },
 };
 
 /* ---------------- Users & auth ---------------- */
@@ -249,7 +337,7 @@ export async function searchAll(q: string): Promise<SearchHit[]> {
     ...a.items.map((x) => ({ kind: 'artigo' as const, title: x.title, subtitle: x.excerpt, to: `/artigos/${x.slug}`, image: x.cover })),
     ...n.items.map((x) => ({ kind: 'notícia' as const, title: x.title, subtitle: x.excerpt, to: `/noticias/${x.slug}`, image: x.cover })),
     ...e.slice(0, 4).map((x) => ({ kind: 'evento' as const, title: x.title, subtitle: x.summary, to: `/eventos/${x.slug}`, image: x.cover })),
-    ...m.slice(0, 4).map((x) => ({ kind: 'mídia' as const, title: x.title, subtitle: x.description, to: `/multimidia?item=${x.id}`, image: x.thumb })),
+    ...m.slice(0, 5).map((x) => ({ kind: 'mídia' as const, title: x.fileName ?? x.title, subtitle: x.sources?.length ? `Em: ${x.sources.map((s) => s.title).join(' · ')}` : x.description, to: `/downloads?item=${encodeURIComponent(x.id)}`, image: x.thumb || undefined })),
   ];
 }
 

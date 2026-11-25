@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CalendarDays, ExternalLink, FileText, Images, LayoutDashboard, LogOut, Menu, Newspaper, Settings, ShieldCheck, Users, X, Eye } from 'lucide-react';
+import { CalendarDays, ExternalLink, Handshake, FileText, Images, LayoutDashboard, LogOut, Menu, Newspaper, Settings, ShieldCheck, Users, X, Eye } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Logo } from '@/components/layout/Logo';
 import { ThemeToggle } from '@/components/layout/ThemeToggle';
@@ -18,7 +18,8 @@ const NAV: { to: string; label: string; icon: typeof FileText; end?: boolean; pe
   { to: '/admin/artigos', label: 'Artigos', icon: FileText, perm: 'content:edit' },
   { to: '/admin/noticias', label: 'Notícias', icon: Newspaper, perm: 'content:edit' },
   { to: '/admin/eventos', label: 'Eventos', icon: CalendarDays, perm: 'events:manage' },
-  { to: '/admin/multimidia', label: 'Multimídia', icon: Images, perm: 'media:upload' },
+  { to: '/admin/downloads', label: 'Downloads', icon: Images, perm: 'media:upload' },
+  { to: '/admin/apoiadores', label: 'Apoiadores', icon: Handshake, perm: 'events:manage' },
   { to: '/admin/usuarios', label: 'Usuários', icon: Users, perm: 'users:view' },
   { to: '/admin/administradores', label: 'Administradores', icon: ShieldCheck, perm: 'admins:manage' },
   { to: '/admin/configuracoes', label: 'Configurações', icon: Settings, perm: 'settings:manage' },

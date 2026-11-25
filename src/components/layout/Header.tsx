@@ -18,7 +18,7 @@ export const NAV = [
   { to: '/artigos', label: 'Artigos' },
   { to: '/noticias', label: 'Notícias' },
   { to: '/eventos', label: 'Eventos' },
-  { to: '/multimidia', label: 'Multimídia' },
+  { to: '/downloads', label: 'Downloads' },
 ];
 
 function ProfileMenu() {

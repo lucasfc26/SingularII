@@ -16,6 +16,7 @@ import { formatDateLong, formatTime } from '@/utils/format';
 import { EASE } from '@/animations/variants';
 import { ReadingProgress } from './ArticleDetail';
 import NotFound from './NotFound';
+import { AttachmentList } from '@/components/content/Downloads';
 
 export default function NewsDetail() {
   const { slug = '' } = useParams();
@@ -58,6 +59,12 @@ export default function NewsDetail() {
       </div>
       <div className="shell mt-12 max-w-3xl">
         <BlockRenderer blocks={item.body.filter((b, i) => !(i > 0 && b.type === 'image' && b.src === item.cover))} />
+          {item.attachments?.length ? (
+            <section className="mt-14 border-t border-line pt-10" aria-labelledby="downloads">
+              <h2 id="downloads" className="mb-5 font-display text-2xl font-semibold">Downloads</h2>
+              <AttachmentList files={item.attachments} />
+            </section>
+          ) : null}
         <a href={item.source.url} target="_blank" rel="noopener noreferrer" className="panel mt-12 flex items-center justify-between gap-4 p-5 transition hover:border-line-strong">
           <span>
             <span className="eyebrow">Fonte original</span>

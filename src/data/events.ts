@@ -1,6 +1,23 @@
 import type { EventItem, Speaker } from '@/types';
 import { daysFromNow } from '@/utils/format';
 import { IMG } from './images';
+import { textFile } from '@/utils/files';
+
+const ROTEIRO = textFile(`ROTEIRO DE OBSERVAÇÃO — SATURNO, JÚPITER E A LUA
+
+1. Chegue 20 minutos antes para adaptar os olhos ao escuro.
+2. Lua crescente: observe o terminador (linha entre dia e noite) — é onde as crateras têm mais relevo.
+3. Júpiter: procure as quatro luas galileanas (Io, Europa, Ganimedes e Calisto) alinhadas ao lado do planeta.
+4. Saturno: os anéis ficam visíveis a partir de ~30x de aumento. Tente localizar Titã.
+5. Anote o horário de cada observação e o telescópio usado.
+
+Material: lanterna com luz vermelha, agasalho, caderno.`);
+
+const LISTA_PALESTRA = textFile(`LEITURAS SUGERIDAS — ALÉM DO HORIZONTE
+
+- Event Horizon Telescope Collaboration (2019). First M87 Event Horizon Telescope Results. ApJL 875, L1.
+- Hawking, S. W. (1975). Particle creation by black holes. Commun. Math. Phys. 43, 199.
+- Thorne, K. S. (1994). Black Holes and Time Warps: Einstein's Outrageous Legacy. W. W. Norton.`);
 
 const sp = (id: string, name: string, role: string, affiliation: string, hue: string): Speaker => ({ id, name, role, affiliation, hue });
 
@@ -40,6 +57,16 @@ export const events: EventItem[] = [
       { id: 'sc5', time: '22:15', title: 'Céu profundo: aglomerados e nebulosas', speakerId: 'sp6' },
     ],
     topics: ['astronomia-observacional'], tags: ['observação', 'telescópio', 'família'], featured: true,
+    attachments: [
+      { id: 'att-1', name: 'Roteiro de observação.txt', url: ROTEIRO, mime: 'text/plain', size: 640, description: 'Passo a passo dos alvos da noite.' },
+      { id: 'att-2', name: 'Alice no País das Maravilhas (Lewis Carroll).epub', url: 'https://www.gutenberg.org/ebooks/11', description: 'Livro em domínio público — Project Gutenberg.' },
+    ],
+    links: [
+      { id: 'lk-1', label: 'Mapa do céu desta noite (Stellarium Web)', url: 'https://stellarium-web.org' },
+      { id: 'lk-2', label: 'Pós-Graduação em Física — UFC', url: 'https://fisica.ufc.br/pos' },
+    ],
+    organizers: ['sup-ufc'],
+    supporters: ['sup-cnpq', 'sup-funcap', 'sup-govce', 'sup-sbf'],
   },
   {
     id: 'ev-2', slug: 'palestra-buracos-negros-alem-do-horizonte', title: 'Além do horizonte: o que sabemos sobre buracos negros',
@@ -56,6 +83,13 @@ export const events: EventItem[] = [
       { id: 'sc4', time: '20:00', title: 'Perguntas do público' },
     ],
     topics: ['buracos-negros', 'relatividade-geral'], tags: ['palestra', 'buracos negros', 'EHT'], featured: true,
+    attachments: [
+      { id: 'att-3', name: 'Leituras sugeridas.txt', url: LISTA_PALESTRA, mime: 'text/plain', size: 420 },
+      { id: 'att-4', name: 'Relatividade: a teoria especial e geral (Albert Einstein).epub', url: 'https://www.gutenberg.org/ebooks/5001', description: 'Livro em domínio público — Project Gutenberg.' },
+    ],
+    links: [{ id: 'lk-3', label: 'Event Horizon Telescope', url: 'https://eventhorizontelescope.org' }],
+    organizers: ['sup-ufc', 'sup-sbf'],
+    supporters: ['sup-cnpq', 'sup-funcap', 'sup-tja', 'sup-idm'],
   },
   {
     id: 'ev-3', slug: 'congresso-brasileiro-de-cosmologia', title: 'Congresso Brasileiro de Cosmologia 2027',
@@ -72,6 +106,8 @@ export const events: EventItem[] = [
       { id: 'sc4', time: '16:00', title: 'Mesa-redonda: holografia e cosmologia', speakerId: 'sp3' },
     ],
     topics: ['cosmologia', 'energia-escura'], tags: ['congresso', 'cosmologia', 'pesquisa'], featured: true,
+    organizers: ['sup-sbf'],
+    supporters: ['sup-cnpq', 'sup-govce'],
   },
   {
     id: 'ev-4', slug: 'workshop-astrofotografia-com-celular', title: 'Workshop: astrofotografia com celular e tripé',

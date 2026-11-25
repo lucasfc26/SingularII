@@ -134,7 +134,7 @@ export function EventsSection() {
 }
 
 export function GallerySection() {
-  const { data, loading } = useQuery(() => mediaService.list(), []);
+  const { data, loading } = useQuery(() => mediaService.list({ kind: 'visual' }), []);
   const items: MediaItem[] = data?.slice(0, 8) ?? [];
   const [index, setIndex] = useState<number | null>(null);
   return (
@@ -145,7 +145,7 @@ export function GallerySection() {
           eyebrow="Galeria do Universo"
           title="Luz que viajou bilhões de anos até aqui."
           description="Imagens de telescópios espaciais, simulações e vídeos educativos — com a história por trás de cada uma."
-          action={<Button to="/multimidia" variant="outline" iconRight={<ArrowRight className="size-4" />}>Abrir a galeria</Button>}
+          action={<Button to="/downloads" variant="outline" iconRight={<ArrowRight className="size-4" />}>Ver Downloads</Button>}
         />
         {loading ? (
           <div className="columns-2 gap-4 lg:columns-4">{Array.from({ length: 8 }, (_, i) => <Skeleton key={i} className="mb-4 rounded-[14px]" style={{ height: 180 + (i % 3) * 70 }} />)}</div>

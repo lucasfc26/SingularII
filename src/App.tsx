@@ -1,5 +1,5 @@
 import { lazy, useCallback, useState } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { PublicLayout } from '@/layouts/PublicLayout';
 import { BlackHoleLoader } from '@/components/loaders/BlackHoleLoader';
@@ -13,7 +13,7 @@ const News = lazy(() => import('@/pages/News'));
 const NewsDetail = lazy(() => import('@/pages/NewsDetail'));
 const Events = lazy(() => import('@/pages/Events'));
 const EventDetail = lazy(() => import('@/pages/EventDetail'));
-const Multimedia = lazy(() => import('@/pages/Multimedia'));
+const Downloads = lazy(() => import('@/pages/Multimedia'));
 const Profile = lazy(() => import('@/pages/Profile'));
 const Login = lazy(() => import('@/pages/Auth').then((m) => ({ default: m.Login })));
 const Register = lazy(() => import('@/pages/Auth').then((m) => ({ default: m.Register })));
@@ -30,6 +30,7 @@ const AdminMedia = lazy(() => import('@/pages/admin/AdminMedia'));
 const AdminUsers = lazy(() => import('@/pages/admin/AdminUsers'));
 const AdminAdmins = lazy(() => import('@/pages/admin/AdminAdmins'));
 const AdminSettings = lazy(() => import('@/pages/admin/AdminSettings'));
+const AdminSupporters = lazy(() => import('@/pages/admin/AdminSupporters'));
 
 const router = createBrowserRouter([
   {
@@ -44,7 +45,8 @@ const router = createBrowserRouter([
       { path: '/noticias/:slug', element: <NewsDetail /> },
       { path: '/eventos', element: <Events /> },
       { path: '/eventos/:slug', element: <EventDetail /> },
-      { path: '/multimidia', element: <Multimedia /> },
+      { path: '/downloads', element: <Downloads /> },
+      { path: '/multimidia', element: <Navigate to="/downloads" replace /> },
       { path: '/perfil', element: <Profile /> },
       { path: '/login', element: <Login /> },
       { path: '/cadastro', element: <Register /> },
@@ -65,7 +67,9 @@ const router = createBrowserRouter([
       { path: 'artigos/:id/editar', element: <ArticleEditorPage /> },
       { path: 'noticias', element: <AdminNews /> },
       { path: 'eventos', element: <AdminEvents /> },
-      { path: 'multimidia', element: <AdminMedia /> },
+      { path: 'downloads', element: <AdminMedia /> },
+      { path: 'multimidia', element: <Navigate to="/admin/downloads" replace /> },
+      { path: 'apoiadores', element: <AdminSupporters /> },
       { path: 'usuarios', element: <AdminUsers /> },
       { path: 'administradores', element: <AdminAdmins /> },
       { path: 'configuracoes', element: <AdminSettings /> },

@@ -33,7 +33,7 @@ export default function CategoryPage() {
         articlesService.list(filter),
         newsService.list(filter),
         topic ? eventsService.list({ topic: topic.slug }) : Promise.resolve([]),
-        topic ? mediaService.list({ topic: topic.slug }) : Promise.resolve([]),
+        topic ? mediaService.list({ topic: topic.slug, kind: 'visual' }) : Promise.resolve([]),
       ]);
       return { articles: a.items, news: n.items, events: e, media: m };
     },
